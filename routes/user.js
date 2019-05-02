@@ -9,8 +9,7 @@ router.get("/", (req, res) => {
 
 router.get('/list/:pageNumber', (req, res) => {
     const pageNumber = req.params.pageNumber;
-    console.log(pageNumber);
-
+    let itemPerPage = 10;
     MongoClient.connect(
         "mongodb+srv://weerayut:22374736@cluster0-4wunc.gcp.mongodb.net/newDatabase62?retryWrites=true", {
             useNewUrlParser: true
@@ -24,13 +23,17 @@ router.get('/list/:pageNumber', (req, res) => {
             dbo
                 .collection('userLoginTable')
                 .find({}, {
-                    limit: 10,
-                    skip: 10 * (Number(pageNumber) - 1),
+                    limit: itemPerPage,
+                    skip: itemPerPage * (Number(pageNumber) - 1),
                     projection: {
-                        _id: 0,
+                        _id: 1,
+                        rank: 1,
                         first_name: 1,
                         last_name: 1,
+                        id_mil: 1,
+                        unit_name: 1,
                         username: 1
+
                     }
                 })
                 .sort({
@@ -47,6 +50,5 @@ router.get('/list/:pageNumber', (req, res) => {
         }
     );
 });
-
 
 module.exports = router;
